@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { searchMusic } from './utils';
+import { searchMusic } from './helpers';
 
 import './App.css';
+
 const initialItems = ['A', 'B', 'C', 'D', 'E'];
 
 const App = () => {
@@ -16,55 +17,61 @@ const App = () => {
         .map((item) => item.collectionName)
         .filter((item) => !!item)
         .slice(0, 5);
-        setMusicData(results)
-      console.log(results);
-    } catch (error) {}
+      setMusicData(results);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const arrangeItems = () => {
     let firstItem = items[0];
-    const updatedItems = items.slice(1, items.length)
+    const updatedItems = items.slice(1, items.length);
     if (musicData.length) {
       firstItem = musicData[0];
       setMusicData(musicData.slice(1, musicData.length));
     }
-      updatedItems.push(firstItem);
-      setItems(updatedItems)
+    updatedItems.push(firstItem);
+    setItems(updatedItems);
   };
 
   const handleSubmit = () => {
     if (searchTerm) {
       handleSearch();
-    } else setMusicData(initialItems);
+    }
   };
 
   useEffect(() => {
     setTimeout(() => {
       arrangeItems();
     }, 1000);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [items]);
 
   return (
-    <div className="wrapper">
-      <input
-        type="text"
-        className="input"
-        placeholder="Search Band"
-        value={searchTerm}
-        onChange={(event) => setSearchTerm(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            handleSubmit();
-          }
-        }}
-      />
-      <div className="box">
-        {items.map((item, index) => (
-          <ul key={index}>
-            <li>{item}</li>
-          </ul>
-        ))}
+    <div className="App">
+      <div className="wrapper">
+        <input
+          name="search"
+          value={searchTerm}
+          onChange={(event) => {
+            if (event.target.value === '') {
+              setMusicData(initialItems);
+            }
+            setSearchTerm(event.target.value);
+          }}
+          placeholder="Search Band"
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') {
+              handleSubmit();
+            }
+          }}
+        />
+        <div className="items-wrapper">
+          {items.map((item, index) => (
+            <div key={index} className="item">
+              {item}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
