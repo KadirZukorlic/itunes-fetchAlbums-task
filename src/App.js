@@ -16,7 +16,9 @@ const App = () => {
       const results = response.results
         .map((item) => item.collectionName)
         .filter((item) => !!item)
-        .slice(0, 5);
+        .slice(0, 5)
+        .sort((a, b)=> a.localeCompare(b));
+        console.log(results)
       setMusicData(results);
     } catch (error) {
       console.log(error);
